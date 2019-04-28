@@ -1,0 +1,25 @@
+1. Introduction
+2. Problem definition
+	- correct the proposal: fast, comprehensive, deployment
+	- our basic procedure: deploy on router/collector, real-time detection, general anomaly
+3. Method: learning
+ 1) feature extraction
+	- 37 features
+	- temporal figures: [fig: in mid-pre]
+ 2) dataset
+	- data access: RIPE, bgpstream/broker [fig:logos]
+	- anomaly labeling: bgpstream.com: mention this doesn't apply to real-time, local case
+ 3) training & test
+   i)	tools: weka
+	goals: worm -> worm
+	algorithms: SMO, logicBoost, NB
+	results: [fig]
+   ii)	tools: pytorch: 
+	goals: general -> general
+	algorithms: DL, (xgboost)
+	results: [fig]
+4. conclusion
+	- which is best
+5. future work
+	- admit some drawbacks
+
