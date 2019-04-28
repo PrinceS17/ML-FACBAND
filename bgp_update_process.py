@@ -1,4 +1,4 @@
-import time, datetime, json, wget, math, calendar, os, sys, inspect
+import time, datetime, json, wget, urllib, math, calendar, os, sys, inspect
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 from extract_feature import FeatureExtractor
@@ -38,8 +38,10 @@ def fetch_data(d_start, d_end, rrc, project='ris'):
         pos = url.find('update')
         filename = url[pos:]
         path = os.path.join(folder, filename)
+        print(url, '\n', filename, '\n', path)
         try:
-            absPath = wget.downlaod(url=url, out=path)
+            absPath = wget.download(url=url, out=path)
+            # urllib.urlretrieve(url, filename=path)
             nameList += [absPath]
             paths += [path]
 
