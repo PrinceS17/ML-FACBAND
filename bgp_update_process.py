@@ -25,7 +25,6 @@ def fetch_data(d_start, d_end, rrc, project='ris'):
         print(e)
         return 0
     links = [r['url'] for r in text['data']['dumpFiles']]
-    print(links)
 
     # make directory and downlaod update 
     folder = 'updates_%s_%s-%s' % (rrc, d_start, d_end)
@@ -38,12 +37,12 @@ def fetch_data(d_start, d_end, rrc, project='ris'):
         pos = url.find('update')
         filename = url[pos:]
         path = os.path.join(folder, filename)
-        print(url, '\n', filename, '\n', path)
+        paths += [path]
+        # print(url, '\n', filename, '\n', path)
         try:
-            absPath = wget.download(url=url, out=path)
-            # urllib.urlretrieve(url, filename=path)
+            # absPath = wget.download(url=url, out=path)
             nameList += [absPath]
-            paths += [path]
+            # paths += [path]
 
         except:
             loss += 1
@@ -66,7 +65,15 @@ def main():
     a_end = int(calendar.timegm(time.strptime(sys.argv[-1], pattern))) // 60
 
     folder, paths = fetch_data(d_start, d_end, rrc)
-    parse_data(folder, paths, a_start, a_end)
+    for path in paths:
+        # print(path)
+        cmd = 'python extract_feature.py %s extr-%s %s %s' % (path, folder, sys.argv[-2], sys.argv[-1])
+        try:
+            os.system(cmd)
+        except:
+            print('path', path, 'failed...')
+        
+    # parse_data(folder, paths, a_start, a_end)
 
 if __name__ == '__main__':
     main()

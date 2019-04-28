@@ -351,7 +351,7 @@ class FeatureExtractor:
 			f.write("@data\n")
 
 def main():
-	extractor = FeatureExtractor(sys.argv[1:-2], "slammer")
+	extractor = FeatureExtractor(sys.argv[1:-3], sys.argv[-3])
 	extractor.header()
 
 	pattern = '%Y-%m-%d-%H-%M-%S'
