@@ -1,4 +1,4 @@
-import time, datetime, json, wget, urllib, math, calendar, os, sys, inspect
+import signal, time, datetime, json, wget, urllib, math, calendar, os, sys, inspect
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 from extract_feature import FeatureExtractor
@@ -16,15 +16,20 @@ from extract_feature import FeatureExtractor
 
 def fetch_data(d_start, d_end, rrc, project='ris'):
     # get all the download links
-    query_url = 'https://bgpstream.caida.org/broker/data?intervals[]=%s,%s&collectors[]=%s&collectors[]=%s&types[]=updates' % (d_start, d_end, project, rrc)
-    session = Session()
-    try:
-        response = session.get(query_url)
-        text = json.loads(response.text)
-    except (ConnectionError, Timeout, TooManyRedirects) as e:
-        print(e)
-        return 0
-    links = [r['url'] for r in text['data']['dumpFiles']]
+    links = []
+    for ti in range(d_start, d_end, 3600):
+        query_url = 'https://bgpstream.caida.org/broker/data?intervals[]=%s,%s&collectors[]=%s&collectors[]=%s&types[]=updates' % (ti, ti + 3600, project, rrc)
+        session = Session()
+        try:
+            response = session.get(query_url)
+            text = json.loads(response.text)
+        except (ConnectionError, Timeout, TooManyRedirects) as e:
+            print(e)
+            return 0
+        tmp = [r['url'] for r in text['data']['dumpFiles']]
+        print(tmp)
+        links += tmp
+    print(links)
 
     # make directory and downlaod update 
     folder = 'updates_%s_%s-%s' % (rrc, d_start, d_end)
@@ -40,7 +45,7 @@ def fetch_data(d_start, d_end, rrc, project='ris'):
         paths += [path]
         # print(url, '\n', filename, '\n', path)
         try:
-            # absPath = wget.download(url=url, out=path)
+            absPath = wget.download(url=url, out=path)
             nameList += [absPath]
             # paths += [path]
 
@@ -70,8 +75,13 @@ def main():
         cmd = 'python extract_feature.py %s extr-%s %s %s' % (path, folder, sys.argv[-2], sys.argv[-1])
         try:
             os.system(cmd)
-        except:
-            print('path', path, 'failed...')
+        except KeyboardInterrupt:
+            x = input('Want to continue? (y/n)')
+            if x == 'y': pass
+            else: 
+                print('Stopped.')
+                return 0
+            # print('path', path, 'failed...')
         
     # parse_data(folder, paths, a_start, a_end)
 
