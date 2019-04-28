@@ -237,7 +237,10 @@ class FeatureExtractor:
 		}
 
 	def refresh(self):
+<<<<<<< HEAD
 		self.features.clear()
+=======
+>>>>>>> origin/jason
 		self.features = {
 			"num_anouncement": 0,
 			"num_withdrawn": 0,
@@ -294,7 +297,11 @@ class FeatureExtractor:
 					if ts != self.ts:
 						if self.ts > 0:
 							self.end()
+<<<<<<< HEAD
 							with open("{0}.arff".format(self.name), "a") as f:
+=======
+							with open("dataset/{0}.arff".format(self.name), "a") as f:
+>>>>>>> origin/jason
 								line = [str(y[1]) for y in sorted(self.features.items(), key=lambda x: self.fm[x[0]])]
 								line.append("Regular" if self.ts < start_time or self.ts > end_time else "Anomaly")
 								f.write(",".join(line) + "\n")
@@ -352,7 +359,11 @@ class FeatureExtractor:
 			f.write("@data\n")
 
 def main():
+<<<<<<< HEAD
 	extractor = FeatureExtractor(sys.argv[1:-2], "slammer")
+=======
+	extractor = FeatureExtractor(sys.argv[1:-3], sys.argv[-3])
+>>>>>>> origin/jason
 	extractor.header()
 
 	pattern = '%Y-%m-%d-%H-%M-%S'
