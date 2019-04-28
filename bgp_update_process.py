@@ -39,7 +39,7 @@ def fetch_data(d_start, d_end, rrc, project='ris'):
         filename = url[pos:]
         path = os.path.join(folder, filename)
         try:
-            absPath = wget.downlaod(url=url, out=path)
+            absPath = wget.download(url=url, out=path)
             nameList += [absPath]
             paths += [path]
 
@@ -64,6 +64,7 @@ def main():
     a_end = int(calendar.timegm(time.strptime(sys.argv[-1], pattern))) // 60
 
     folder, paths = fetch_data(d_start, d_end, rrc)
+    paths = [path for path in paths if os.stat(path).st_size <= 2000000]
     parse_data(folder, paths, a_start, a_end)
 
 if __name__ == '__main__':

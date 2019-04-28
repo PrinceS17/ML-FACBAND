@@ -237,6 +237,7 @@ class FeatureExtractor:
 		}
 
 	def refresh(self):
+		self.features.clear()
 		self.features = {
 			"num_anouncement": 0,
 			"num_withdrawn": 0,
